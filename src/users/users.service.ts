@@ -6,7 +6,6 @@ import {
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserRole } from './entities/user.entity';
@@ -20,7 +19,7 @@ export class UserService {
   ) {}
 
   // Create a new user
-  async create(userData: CreateUserDto): Promise<void> {
+  async create(userData: CreateUserDto): Promise<string> {
     // Input Validation
     if (!userData.email || !userData.password) {
       throw new BadRequestException('Email or password is required');
