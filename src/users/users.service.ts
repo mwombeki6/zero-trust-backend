@@ -4,6 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,32 +12,10 @@ import { Repository } from 'typeorm';
 import { User, UserRole } from './entities/user.entity';
 
 @Injectable()
-export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
-
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
-}
-
-@Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
+    private jwtService: JwtService,
     private readonly userRepository: Repository<User>,
   ) {}
 
@@ -70,7 +49,11 @@ export class UserService {
       const savedUser = await manager.save(user);
 
       // Generate token after successful save
-      return this.jwt
+      return this.jwtService.signAsync({
+        sub: savedUser.id,
+        email: savedUser.email,
+        role: savedUser.role,
+      });
     });
   }
 
