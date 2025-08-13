@@ -14,7 +14,7 @@ import {
 } from 'class-validator';
 import { UserRole } from '../entities/user.entity';
 import { Transform } from 'class-transformer';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUserDto {
   @IsString()
@@ -47,6 +47,30 @@ export class CreateUserDto {
   role: UserRole;
 }
 
+export class LoginDto {
+  @ApiProperty({
+    description: 'User email address',
+    example: 'john.doe@example.com',
+  })
+  @IsEmail({}, { message: 'Please provide a valid email address' })
+  @IsNotEmpty({ message: 'Email is required' })
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.toLowerCase().trim() : value,
+  )
+  email: string;
+
+  @ApiProperty({
+    description: 'User password',
+    example: 'SecurePassword123!',
+    minLength: 8,
+  })
+  @IsString({ message: 'Password must be a string' })
+  @IsNotEmpty({ message: 'Password is required' })
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  @MaxLength(128, { message: 'Password must not exceed 128 characters' })
+  password: string;
+}
+
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
@@ -71,6 +95,8 @@ export class UpdateUserDto {
   @IsNotEmpty()
   @MaxLength(255)
   username?: string;
+
+  last_login?: Date;
 }
 
 export enum SortField {
@@ -151,4 +177,24 @@ export class UserListDto {
   })
   @IsBoolean({ message: 'is_email_verified must be a boolean' })
   is_email_verified?: boolean;
+}
+
+export class ChangePasswordDto {
+  @ApiProperty({
+    description: 'Current password',
+    example: 'currentPassword123',
+  })
+  @IsNotEmpty()
+  @IsString()
+  currentPassword: string;
+
+  @ApiProperty({
+    description: 'New password (minimum 8 characters)',
+    example: 'newSecurePassword123',
+    minLength: 8,
+  })
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(8, { message: 'New password must be at least 8 characters long' })
+  newPassword: string;
 }
