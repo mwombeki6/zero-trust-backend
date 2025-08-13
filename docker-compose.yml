@@ -19,7 +19,6 @@ services:
 
   app:
     build:
-      context: .
       dockerfile: Dockerfile
     container_name: zero-trust-data-engine
     ports:
