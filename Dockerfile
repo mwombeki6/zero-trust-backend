@@ -4,14 +4,14 @@ FROM node:22
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy dependency files first (better for caching)
 COPY package*.json ./
 
 # Install the application dependencies
 RUN npm install
 
-# Copy the rest of the application files
-COPY src .
+# Copy the rest of the application files (including tsconfig.json, nest-cli.json, etc.)
+COPY . .
 
 # Build the NestJS application
 RUN npm run build
@@ -19,5 +19,5 @@ RUN npm run build
 # Expose the application port
 EXPOSE 3000
 
-# Command to run the application
-CMD [ "npm", "run", "start:dev" ]
+# Start the app in production mode
+CMD ["npm", "run", "start:prod"]

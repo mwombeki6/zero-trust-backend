@@ -24,7 +24,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ax_app:/app/src
+      - zero-trust_app:/app/src
     networks:
       - app-network
     depends_on:
@@ -47,7 +47,7 @@ services:
 
 volumes:
   postgres_data:
-  ax_app:
+  zero-trust_app:
 
 networks:
   app-network:

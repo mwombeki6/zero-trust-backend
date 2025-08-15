@@ -18,7 +18,7 @@ import { User } from './users/entities/user.entity';
       envFilePath: '.env',
       validationSchema: Joi.object({
         // Database Configuration
-        DATABASE_HOST: Joi.string().default('localhost'),
+        DATABASE_HOST: Joi.string().default('postgres'),
         DATABASE_PORT: Joi.number().default(5432),
         DATABASE_USER: Joi.string().default('postgres'),
         DATABASE_PASSWORD: Joi.string().default('postgres'),
